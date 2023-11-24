@@ -3,10 +3,9 @@ import "./App.css";
 import { TodolistsList } from "features/TodolistsList/TodolistsList";
 import { ErrorSnackbar } from "components/ErrorSnackbar/ErrorSnackbar";
 import { useSelector } from "react-redux";
-import { initializeAppTC } from "app/app.reducer";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Login } from "features/auth/Login";
-import { logoutTC } from "features/auth/auth.reducer";
+import {authThunks} from "features/auth/auth.reducer";
 import {
   AppBar,
   Button,
@@ -34,11 +33,11 @@ function App({ demo = false }: PropsType) {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(initializeAppTC());
+    dispatch(authThunks.initializeApp());
   }, []);
 
   const logoutHandler = useCallback(() => {
-    dispatch(logoutTC());
+    dispatch(authThunks.logout());
   }, []);
 
   if (!isInitialized) {

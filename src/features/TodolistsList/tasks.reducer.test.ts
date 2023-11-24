@@ -4,7 +4,7 @@ import {
   tasksThunks
 } from "features/TodolistsList/tasks.reducer";
 import {TaskPriorities, TaskStatuses, TaskType} from "api/todolists-api";
-import { todolistsActions } from "features/TodolistsList/todolists.reducer";
+import {todolistsActions, todoThunks} from "features/TodolistsList/todolists.reducer";
 
 let startState: TasksStateType = {};
 beforeEach(() => {
@@ -166,14 +166,18 @@ test("title of specified task should be changed", () => {
 });
 
 test("new array should be added when new todolist is added", () => {
-  const action = todolistsActions.addTodolist({
-    todolist: {
-      id: "blabla",
-      title: "new todolist",
-      order: 0,
-      addedDate: "",
-    },
-  });
+  const todolist = {
+    id: "blabla",
+    title: "new todolist",
+    order: 0,
+    addedDate: "",
+  }
+
+  const action = {
+    type: todoThunks.addTodolist.fulfilled.type,
+    payload: {todolist}
+
+  }
 
   const endState = tasksReducer(startState, action);
 
@@ -188,7 +192,12 @@ test("new array should be added when new todolist is added", () => {
 });
 
 test("property with todolistId should be deleted", () => {
-  const action = todolistsActions.removeTodolist({ id: "todolistId2" });
+
+  const action = {
+    type: todoThunks.removeTodolist.fulfilled.type,
+    payload: { id: "todolistId2" }
+  }
+
 
   const endState = tasksReducer(startState, action);
 
@@ -199,12 +208,13 @@ test("property with todolistId should be deleted", () => {
 });
 
 test("empty arrays should be added when we set todolists", () => {
-  const action = todolistsActions.setTodolists({
-    todolists: [
-      { id: "1", title: "title 1", order: 0, addedDate: "" },
-      { id: "2", title: "title 2", order: 0, addedDate: "" },
-    ],
-  });
+  const action = {
+    type: todoThunks.fetchTodolists.fulfilled.type,
+    payload: {todolists: [
+        { id: "1", title: "title 1", order: 0, addedDate: "" },
+        { id: "2", title: "title 2", order: 0, addedDate: "" },
+      ]}
+  };
 
   const endState = tasksReducer({}, action);
 

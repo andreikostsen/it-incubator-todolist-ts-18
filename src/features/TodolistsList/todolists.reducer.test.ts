@@ -2,7 +2,7 @@ import {
   FilterValuesType,
   TodolistDomainType,
   todolistsActions,
-  todolistsReducer,
+  todolistsReducer, todoThunks,
 } from "features/TodolistsList/todolists.reducer";
 import { v1 } from "uuid";
 import { TodolistType } from "api/todolists-api";
@@ -22,7 +22,14 @@ beforeEach(() => {
 });
 
 test("correct todolist should be removed", () => {
-  const endState = todolistsReducer(startState, todolistsActions.removeTodolist({ id: todolistId1 }));
+
+  const action = {
+    type: todoThunks.removeTodolist.fulfilled.type,
+    payload: {id: todolistId1}
+
+  }
+
+  const endState = todolistsReducer(startState, action);
 
   expect(endState.length).toBe(1);
   expect(endState[0].id).toBe(todolistId2);
@@ -36,7 +43,14 @@ test("correct todolist should be added", () => {
     order: 0,
   };
 
-  const endState = todolistsReducer(startState, todolistsActions.addTodolist({ todolist }));
+
+  const action = {
+    type: todoThunks.addTodolist.fulfilled.type,
+    payload: {todolist}
+  }
+
+
+  const endState = todolistsReducer(startState, action);
 
   expect(endState.length).toBe(3);
   expect(endState[0].title).toBe(todolist.title);
@@ -46,7 +60,10 @@ test("correct todolist should be added", () => {
 test("correct todolist should change its name", () => {
   let newTodolistTitle = "New Todolist";
 
-  const action = todolistsActions.changeTodolistTitle({ id: todolistId2, title: newTodolistTitle });
+  const action = {
+    type: todoThunks.changeTodolistTitle.fulfilled.type,
+    payload: { id: todolistId2, title: newTodolistTitle }
+  };
 
   const endState = todolistsReducer(startState, action);
 
@@ -65,7 +82,13 @@ test("correct filter of todolist should be changed", () => {
   expect(endState[1].filter).toBe(newFilter);
 });
 test("todolists should be added", () => {
-  const action = todolistsActions.setTodolists({ todolists: startState });
+
+
+  const action = {
+    type: todoThunks.fetchTodolists.fulfilled.type,
+    payload: {todolists: startState}
+
+  }
 
   const endState = todolistsReducer([], action);
 
