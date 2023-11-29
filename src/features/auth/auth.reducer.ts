@@ -6,6 +6,7 @@ import {appActions, appReducer} from "app/app.reducer";
 import { clearTasksAndTodolists } from "common/actions/common.actions";
 import {createAppAsyncThunk} from "../../utils/createAppAsyncThunk";
 import {fetchTasks} from "../TodolistsList/tasks.reducer";
+import {BaseResponseType} from "../../common/types";
 
 const slice = createSlice({
   name: "auth",
@@ -49,8 +50,13 @@ try {
                  return  { isLoggedIn: true };
 
             } else {
-                handleServerAppError(res.data, dispatch);
-                return  rejectWithValue(null)
+
+
+                const showGlobalError = !res.data.fieldsErrors.length
+
+                handleServerAppError(res.data, dispatch, showGlobalError);
+                //dispatch(appActions.setAppStatus({ status: "failed" }));
+                return  rejectWithValue(res.data)
             }
 }
 catch (error:any) {
@@ -113,4 +119,5 @@ const initializeApp = createAppAsyncThunk<{ isLoggedIn: boolean }, undefined>(
 export const authReducer = slice.reducer;
 export const authActions = slice.actions;
 export const authThunks = {login, logout, initializeApp};
+
 
